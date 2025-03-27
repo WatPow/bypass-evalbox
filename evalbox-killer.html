@@ -76,6 +76,33 @@
       font-family: monospace;
       font-size: 13px;
     }
+    
+    .browser-tip {
+      background: #eefaee;
+      border-left: 4px solid #27ae60;
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    
+    .browser-tip h3 {
+      margin-top: 0;
+      color: #27ae60;
+    }
+    
+    .browser-tip ul {
+      margin-bottom: 0;
+    }
+    
+    details {
+      margin: 10px 0;
+    }
+    
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -96,6 +123,36 @@
         <li>Ouvrez la console développeur dans l'onglet d'examen (F12)</li>
         <li>Collez et exécutez le code dans la console</li>
       </ol>
+    </div>
+    
+    <div class="browser-tip">
+      <h3>Navigateur recommandé : Firefox</h3>
+      <p>Pour une protection optimale, nous recommandons d'utiliser Firefox avec ces configurations:</p>
+      
+      <details>
+        <summary>Configuration Firefox optimale</summary>
+        <ol>
+          <li>Tapez <code>about:config</code> dans la barre d'adresse</li>
+          <li>Définissez les configurations suivantes:
+            <ul>
+              <li><code>privacy.resistFingerprinting</code> = <code>true</code></li>
+              <li><code>dom.event.clipboardevents.enabled</code> = <code>false</code></li>
+              <li><code>media.navigator.enabled</code> = <code>false</code></li>
+            </ul>
+          </li>
+        </ol>
+      </details>
+      
+      <details>
+        <summary>Extensions recommandées</summary>
+        <ul>
+          <li><strong>Privacy Badger</strong> - Bloque les traqueurs</li>
+          <li><strong>uBlock Origin</strong> - Bloqueur de publicités et de scripts</li>
+          <li><strong>CanvasBlocker</strong> - Empêche le fingerprinting via Canvas</li>
+        </ul>
+      </details>
+      
+      <p>Utilisez le mode de navigation privée pour une protection supplémentaire.</p>
     </div>
     
     <div class="code-block" id="code-output">// Cliquez sur "Générer Code" pour obtenir le script d'injection</div>

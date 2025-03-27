@@ -23,6 +23,29 @@ L'outil le plus efficace et le plus simple à utiliser.
 4. Ouvrez la console développeur dans l'onglet d'examen (F12)
 5. Collez et exécutez le code dans la console
 
+## Navigateur et Configuration Recommandés
+
+Pour une protection optimale, nous recommandons d'utiliser les éléments suivants :
+
+### Navigateur recommandé : Firefox
+
+Firefox offre plus d'options de configuration pour la confidentialité et permet de désactiver certaines API utilisées pour la détection.
+
+### Configuration Firefox optimale
+1. Tapez `about:config` dans la barre d'adresse et acceptez l'avertissement
+2. Définissez les configurations suivantes :
+   - `privacy.resistFingerprinting` = `true`
+   - `dom.event.clipboardevents.enabled` = `false`
+   - `media.navigator.enabled` = `false`
+
+### Extensions recommandées
+- Privacy Badger - Bloque les traqueurs
+- uBlock Origin - Bloqueur de publicités et de scripts
+- CanvasBlocker - Empêche le fingerprinting via Canvas
+
+### Mode Navigation
+Utilisez le mode de navigation privée qui désactive certains stockages persistants et limite le fingerprinting.
+
 ## Test avec l'outil de démonstration
 
 Le projet inclut un outil de démonstration (`evalbox.html`) qui simule le comportement d'une plateforme d'examen avec des détections anti-triche.
