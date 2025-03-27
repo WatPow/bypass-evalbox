@@ -1,14 +1,86 @@
-# EvalBox Bypass Tool
+# EvalBox Killer
+
+Suite d'outils pour contourner la détection d'activité dans les systèmes d'examen en ligne.
+
+## Outils disponibles
+
+### EvalBox Killer
+[`evalbox-killer.html`](evalbox-killer.html) - Version standard et stable pour contourner les principales détections:
+- Neutralise performance.now()
+- Bloque les événements de visibilité/focus
+- Simule l'activité utilisateur
+- Empêche la détection de changement d'onglet
+
+### EvalBox Killer Ultimate
+[`evalbox-killer-ultimate.html`](evalbox-killer-ultimate.html) - Version complète avec toutes les protections avancées:
+- Toutes les fonctionnalités de la version standard
+- Protection contre fingerprinting Canvas
+- Neutralisation de l'API Battery
+- Blocage des SharedWorkers et ServiceWorkers
+- Protection contre les détections WebRTC
+- Protection contre la détection des outils développeur
+- Et plus encore...
+
+### EvalBox Killer Advanced 
+[`evalbox-killer-advanced.html`](evalbox-killer-advanced.html) - Version expérimentale avec techniques avancées
+
+## Navigateur recommandé
+
+Pour une protection optimale, nous recommandons d'utiliser **Firefox** avec ces configurations:
+
+1. Tapez `about:config` dans la barre d'adresse
+2. Définissez les configurations suivantes:
+   - `privacy.resistFingerprinting` = `true`
+   - `dom.event.clipboardevents.enabled` = `false`
+   - `media.navigator.enabled` = `false`
+
+### Extensions recommandées
+- **Privacy Badger** - Bloque les traqueurs
+- **uBlock Origin** - Bloqueur de publicités et de scripts
+- **CanvasBlocker** - Empêche le fingerprinting via Canvas
+
+## Usage
+
+1. Ouvrez la page d'examen dans un onglet
+2. Ouvrez un des outils EvalBox Killer dans un autre onglet
+3. Suivez les instructions affichées
+
+## Note
 
 Un outil permettant de contourner les restrictions de navigation et les mécanismes de détection d'EvalBox et autres plateformes d'examen similaires.
 
 ## Description
 
-Ce projet propose une solution efficace pour contourner les détections anti-triche des plateformes d'examen en ligne comme EvalBox. L'outil permet de naviguer librement entre les onglets pendant un examen sans être détecté.
+Ce projet propose des solutions efficaces pour contourner les détections anti-triche des plateformes d'examen en ligne comme EvalBox. Ces outils permettent de naviguer librement entre les onglets pendant un examen sans être détecté.
 
-## Solution principale : EvalBox Killer
+## Solutions disponibles
 
-L'outil le plus efficace et le plus simple à utiliser.
+### 1. EvalBox Killer Advanced (Recommandé)
+
+La solution la plus complète qui neutralise toutes les méthodes connues de détection JavaScript.
+
+**Fonctionnalités avancées:**
+- Neutralisation de `performance.now()` et `Date.now()`
+- Protection contre les détections via `requestAnimationFrame`
+- Protection contre le fingerprinting via Canvas
+- Neutralisation de l'API Battery
+- Blocage des SharedWorkers et ServiceWorkers
+- Protection contre les détections WebRTC
+- Neutralisation des détections via propriétés de fenêtre
+- Protection contre la détection des outils développeur
+- Blocage complet des événements de visibilité et focus
+- Simulation d'activité utilisateur (souris et scroll)
+
+**Utilisation:**
+1. Ouvrez `evalbox-killer-advanced.html`
+2. Cliquez sur "Générer Code"
+3. Copiez le code généré
+4. Ouvrez la console développeur dans l'onglet d'examen (F12)
+5. Collez et exécutez le code dans la console
+
+### 2. EvalBox Killer (Version simple)
+
+Une version plus légère mais efficace.
 
 **Fonctionnalités:**
 - Neutralise `performance.now()` au niveau du prototype
@@ -27,22 +99,6 @@ L'outil le plus efficace et le plus simple à utiliser.
 
 Pour une protection optimale, nous recommandons d'utiliser les éléments suivants :
 
-### Navigateur recommandé : Firefox
-
-Firefox offre plus d'options de configuration pour la confidentialité et permet de désactiver certaines API utilisées pour la détection.
-
-### Configuration Firefox optimale
-1. Tapez `about:config` dans la barre d'adresse et acceptez l'avertissement
-2. Définissez les configurations suivantes :
-   - `privacy.resistFingerprinting` = `true`
-   - `dom.event.clipboardevents.enabled` = `false`
-   - `media.navigator.enabled` = `false`
-
-### Extensions recommandées
-- Privacy Badger - Bloque les traqueurs
-- uBlock Origin - Bloqueur de publicités et de scripts
-- CanvasBlocker - Empêche le fingerprinting via Canvas
-
 ### Mode Navigation
 Utilisez le mode de navigation privée qui désactive certains stockages persistants et limite le fingerprinting.
 
@@ -59,7 +115,7 @@ Le projet inclut un outil de démonstration (`evalbox.html`) qui simule le compo
 **Utilisation pour tester:**
 1. Ouvrez `evalbox.html` dans un onglet
 2. Activez les différentes détections
-3. Dans un autre onglet, ouvrez `evalbox-killer.html`
+3. Dans un autre onglet, ouvrez `evalbox-killer-advanced.html` ou `evalbox-killer.html`
 4. Générez et copiez le code d'injection
 5. Revenez à l'onglet `evalbox.html` et exécutez le code dans la console
 6. Testez en changeant d'onglet - aucune détection ne devrait apparaître
@@ -72,15 +128,32 @@ Les plateformes comme EvalBox utilisent plusieurs techniques pour détecter si v
 2. **Événements Focus/Blur** - Détecte quand la fenêtre perd le focus
 3. **Performance Timing** (`performance.now()`) - Détecte des anomalies de timing quand l'onglet est inactif
 4. **Tracking de souris** - Surveille les mouvements de souris et les périodes d'inactivité
+5. **Battery API** - Surveille les changements d'état de batterie pour détecter l'inactivité
+6. **requestAnimationFrame** - Autre méthode pour détecter les anomalies de timing quand l'onglet est inactif
+7. **Canvas fingerprinting** - Génère une empreinte unique du navigateur qui pourrait changer si l'utilisateur change d'environnement
 
-## Comment fonctionne EvalBox Killer
+## Comment fonctionnent nos outils
 
-Notre solution contourne ces détections en :
+Nos solutions contournent ces détections en :
 
 1. **Remplaçant performance.now()** - Modifie directement le prototype de Performance pour fournir des valeurs cohérentes
 2. **Redéfinissant les propriétés de visibilité** - Neutralise document.hidden et visibilityState
 3. **Bloquant les événements** - Empêche la propagation des événements blur/focus
 4. **Simulant l'activité** - Génère des mouvements de souris aléatoires régulièrement
+5. **Neutralisant diverses API** - Empêche l'utilisation d'autres API pour la détection (version avancée)
+
+## Organisation du projet
+
+```
+bypass-evalbox/
+├── evalbox.html                   # Page de démonstration simulant un système de détection
+├── evalbox-killer.html            # Solution simple mais efficace
+├── evalbox-killer-ultimate.html   # Nouvelle version complète avec toutes les protections avancées
+├── js/
+│   ├── evalbox-bypass.js          # Script principal de bypass avancé
+│   └── loader-inline.js                  # Chargeur pour générer le code d'injection
+└── README.md                      # Ce fichier
+```
 
 ## Avertissement
 

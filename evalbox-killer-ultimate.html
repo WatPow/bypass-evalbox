@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>EvalBox Killer Ultimate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #8e44ad;
+      margin-top: 0;
+    }
+    
+    .code-block {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 20px 0;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    button {
+      background: #8e44ad;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    
+    button:hover {
+      background: #9b59b6;
+    }
+    
+    .instructions {
+      background: #f0e6f6;
+      border-left: 4px solid #8e44ad;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .warning {
+      background: #fff4e6;
+      border-left: 4px solid #e67e22;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    #log {
+      height: 150px;
+      overflow-y: auto;
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 20px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    
+    .browser-tip {
+      background: #eefaee;
+      border-left: 4px solid #27ae60;
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    
+    details {
+      margin: 10px 0;
+    }
+    
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    
+    .features {
+      background: #f0e6f6;
+      border-left: 4px solid #8e44ad;
+      padding: 15px;
+      margin: 20px 0;
+    }
+    
+    .features ul {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding-left: 25px;
+    }
+    
+    .features li {
+      margin-bottom: 5px;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 3px 7px;
+      font-size: 12px;
+      background: #8e44ad;
+      color: white;
+      border-radius: 10px;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>EvalBox Killer Ultimate <span class="badge">v1.0</span></h1>
+    
+    <div class="instructions">
+      <strong>Solution ultime et complète</strong> pour contourner les détections de surveillance des plateformes d'examen en ligne.
+      Cette version combine toutes les fonctionnalités avancées avec une stabilité maximale.
+    </div>
+    
+    <div class="features">
+      <strong>Fonctionnalités complètes:</strong>
+      <ul>
+        <li>Neutralisation de <code>performance.now()</code> et <code>Date.now()</code></li>
+        <li>Protection contre les détections via <code>requestAnimationFrame</code></li>
+        <li>Protection contre le fingerprinting via Canvas</li>
+        <li>Neutralisation de l'API Battery</li>
+        <li>Blocage des SharedWorkers et ServiceWorkers</li>
+        <li>Protection contre les détections WebRTC</li>
+        <li>Neutralisation des détections via propriétés de fenêtre</li>
+        <li>Protection contre la détection des outils développeur</li>
+        <li>Blocage complet des événements de visibilité et focus</li>
+        <li>Simulation d'activité utilisateur (souris et scroll)</li>
+      </ul>
+    </div>
+    
+    <div class="warning">
+      <strong>Instructions:</strong>
+      <ol>
+        <li>Ouvrez la page d'examen dans un onglet</li>
+        <li>Cliquez sur "Générer Code" ci-dessous</li>
+        <li>Copiez le code généré</li>
+        <li>Ouvrez la console développeur dans l'onglet d'examen (F12)</li>
+        <li>Collez et exécutez le code dans la console</li>
+      </ol>
+    </div>
+    
+    <div class="browser-tip">
+      <h3>Navigateur recommandé : Firefox</h3>
+      <p>Pour une protection optimale, nous recommandons d'utiliser Firefox avec ces configurations:</p>
+      
+      <details>
+        <summary>Configuration Firefox optimale</summary>
+        <ol>
+          <li>Tapez <code>about:config</code> dans la barre d'adresse</li>
+          <li>Définissez les configurations suivantes:
+            <ul>
+              <li><code>privacy.resistFingerprinting</code> = <code>true</code></li>
+              <li><code>dom.event.clipboardevents.enabled</code> = <code>false</code></li>
+              <li><code>media.navigator.enabled</code> = <code>false</code></li>
+            </ul>
+          </li>
+        </ol>
+      </details>
+      
+      <details>
+        <summary>Extensions recommandées</summary>
+        <ul>
+          <li><strong>Privacy Badger</strong> - Bloque les traqueurs</li>
+          <li><strong>uBlock Origin</strong> - Bloqueur de publicités et de scripts</li>
+          <li><strong>CanvasBlocker</strong> - Empêche le fingerprinting via Canvas</li>
+        </ul>
+      </details>
+      
+      <p>Utilisez le mode de navigation privée pour une protection supplémentaire.</p>
+    </div>
+    
+    <div class="code-block" id="code-output">// Cliquez sur "Générer Code" pour obtenir le script d'injection ultime</div>
+    
+    <div>
+      <button id="generate">Générer Code</button>
+      <button id="copy">Copier le Code</button>
+    </div>
+    
+    <div id="log"></div>
+  </div>
+  
+  <script>
+    (function() {
+      // Éléments DOM
+      const codeOutput = document.getElementById('code-output');
+      const generateBtn = document.getElementById('generate');
+      const copyBtn = document.getElementById('copy');
+      const logEl = document.getElementById('log');
+      
+      // Logger
+      function log(message) {
+        const now = new Date();
+        const timestamp = now.toLocaleTimeString();
+        logEl.innerHTML += `[${timestamp}] ${message}<br>`;
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+      
+      // Générer le code d'injection ultime (combinant fonctionnalités avancées et stabilité)
+      function generateInjectionCode() {
+        return `
+// ===== EvalBox Killer Ultimate =====
+(function() {
+  console.log("[EvalBox] Démarrage du système ultime...");
+  
+  // Identification
+  var VERSION = "1.0";
+  var SCRIPT_ID = Math.random().toString(36).substring(2, 10);
+  
+  // *** 1. NEUTRALISATION DE PERFORMANCE.NOW() ***
+  
+  // Sauvegarder les originaux
+  var _originalPerformanceNow = performance.now;
+  var _originalDateNow = Date.now;
+  
+  // Valeurs de base pour la simulation
+  var _baseTime = _originalPerformanceNow.call(performance);
+  var _startTime = _originalDateNow.call(Date);
+  var _lastTime = _startTime;
+  
+  // Fonction intermédiaire pour éviter la récursion
+  function safePerformanceNow() {
+    var now = _originalDateNow.call(Date);
+    var elapsed = now - _lastTime;
+    _lastTime = now;
+    
+    // Simuler ~60 FPS
+    _baseTime += Math.min(elapsed, 16.67);
+    
+    return _baseTime;
+  }
+  
+  // Remplacer performance.now()
+  performance.now = safePerformanceNow;
+  
+  // *** 2. NEUTRALISATION DE DATE.NOW() ***
+  
+  var _dateOffsetBase = _startTime;
+  var _perfOffsetBase = _baseTime;
+  
+  // Fonction sécurisée pour Date.now()
+  function safeDateNow() {
+    // Calculer l'écart de temps depuis le début
+    return _dateOffsetBase + (safePerformanceNow() - _perfOffsetBase);
+  }
+  
+  // Remplacer Date.now()
+  Date.now = safeDateNow;
+  
+  // *** 3. NEUTRALISATION DES DÉTECTIONS DE VISIBILITÉ ***
+  
+  try {
+    // Vérifier si les propriétés peuvent être modifiées
+    if (Object.getOwnPropertyDescriptor(Document.prototype, 'hidden') === undefined ||
+        Object.getOwnPropertyDescriptor(Document.prototype, 'hidden').configurable !== false) {
+      Object.defineProperty(document, 'hidden', {
+        value: false,
+        configurable: true
+      });
+    }
+    
+    if (Object.getOwnPropertyDescriptor(Document.prototype, 'visibilityState') === undefined ||
+        Object.getOwnPropertyDescriptor(Document.prototype, 'visibilityState').configurable !== false) {
+      Object.defineProperty(document, 'visibilityState', {
+        value: 'visible',
+        configurable: true
+      });
+    }
+    
+    // Remplacer document.hasFocus
+    document.hasFocus = function() { 
+      return true; 
+    };
+  } catch(e) {
+    console.log("[EvalBox] Note: Certaines propriétés de visibilité ne peuvent pas être modifiées (non critique)");
+  }
+  
+  // *** 4. NEUTRALISATION DES ÉVÉNEMENTS ***
+  
+  var blockedEvents = [
+    'visibilitychange', 'webkitvisibilitychange', 'mozvisibilitychange',
+    'blur', 'focus', 'focusin', 'focusout',
+    'pagehide', 'pageshow', 'freeze', 'resume'
+  ];
+  
+  var originalAddEventListener = EventTarget.prototype.addEventListener;
+  
+  // Remplacer addEventListener
+  EventTarget.prototype.addEventListener = function(type, listener, options) {
+    if (blockedEvents.indexOf(type) >= 0) {
+      console.log("[EvalBox] Blocage du listener pour: " + type);
+      return;
+    }
+    
+    return originalAddEventListener.call(this, type, listener, options);
+  };
+  
+  // Bloquer les événements existants
+  function blockEvent(e) {
+    if (e && typeof e.stopImmediatePropagation === 'function') {
+      e.stopImmediatePropagation();
+    }
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault();
+    }
+    return true;
+  }
+  
+  // Attacher des bloqueurs
+  blockedEvents.forEach(function(eventType) {
+    try {
+      originalAddEventListener.call(window, eventType, blockEvent, true);
+      originalAddEventListener.call(document, eventType, blockEvent, true);
+    } catch(e) {
+      console.log("[EvalBox] Erreur lors du blocage de l'événement " + eventType + " (non critique)");
+    }
+  });
+  
+  // *** 5. NEUTRALISATION DU REQUESTANIMATIONFRAME ***
+  
+  var originalRAF = window.requestAnimationFrame;
+  var lastRAFTime = 0;
+  
+  // Remplacer requestAnimationFrame
+  window.requestAnimationFrame = function(callback) {
+    return originalRAF.call(window, function(timestamp) {
+      // Ajuster le timestamp
+      if (lastRAFTime === 0) {
+        lastRAFTime = timestamp;
+      } else {
+        lastRAFTime += 16.67; // ~60 FPS
+      }
+      
+      callback(lastRAFTime);
+    });
+  };
+  
+  // *** 6. NEUTRALISATION DE L'API BATTERY ***
+  
+  if (navigator.getBattery) {
+    navigator.getBattery = function() {
+      return new Promise(function(resolve) {
+        var fakeBattery = {
+          charging: true,
+          chargingTime: Infinity,
+          dischargingTime: Infinity,
+          level: 0.92 + Math.random() * 0.08, // Niveau entre 92% et 100%
+          addEventListener: function() {},
+          removeEventListener: function() {}
+        };
+        resolve(fakeBattery);
+      });
+    };
+  }
+  
+  // *** 7. PROTECTION CONTRE LE FINGERPRINTING CANVAS ***
+  
+  var originalGetContext = HTMLCanvasElement.prototype.getContext;
+  
+  HTMLCanvasElement.prototype.getContext = function() {
+    var context = originalGetContext.apply(this, arguments);
+    
+    if (context && arguments[0] === '2d') {
+      var originalGetImageData = context.getImageData;
+      var originalToDataURL = this.toDataURL;
+      
+      // Modifier légèrement les données d'image
+      context.getImageData = function() {
+        var imageData = originalGetImageData.apply(this, arguments);
+        
+        // Modifier quelques pixels de manière imperceptible
+        if (imageData && imageData.data && imageData.data.length > 100) {
+          for (var i = 0; i < imageData.data.length; i += 997) { // Nombre premier pour répartition
+            if (imageData.data[i] > 0) {
+              imageData.data[i] -= 1;
+            }
+          }
+        }
+        
+        return imageData;
+      };
+      
+      // Intercepter toDataURL
+      this.toDataURL = function() {
+        return originalToDataURL.apply(this, arguments);
+      };
+    }
+    
+    return context;
+  };
+  
+  // *** 8. NEUTRALISATION WEBRTC ***
+  
+  // Bloquer WebRTC si disponible
+  if (window.RTCPeerConnection) {
+    window.RTCPeerConnection = function() {
+      console.log("[EvalBox] Tentative de création RTCPeerConnection neutralisée");
+      
+      // Créer un objet factice
+      return {
+        createOffer: function() { 
+          return new Promise(function(resolve) {
+            resolve({
+              sdp: "v=0\\r\\no=- 0 0 IN IP4 127.0.0.1\\r\\n",
+              type: "offer"
+            });
+          });
+        },
+        createAnswer: function() {
+          return new Promise(function(resolve) {
+            resolve({
+              sdp: "v=0\\r\\no=- 0 0 IN IP4 127.0.0.1\\r\\n",
+              type: "answer"
+            });
+          });
+        },
+        setLocalDescription: function() { return Promise.resolve(); },
+        setRemoteDescription: function() { return Promise.resolve(); },
+        addEventListener: function() {},
+        removeEventListener: function() {},
+        dispatchEvent: function() { return true; },
+        close: function() {}
+      };
+    };
+  }
+  
+  // *** 9. NEUTRALISATION DES WORKERS ***
+  
+  // Neutraliser SharedWorker
+  if (window.SharedWorker) {
+    window.SharedWorker = function() {
+      console.log("[EvalBox] Tentative d'utilisation de SharedWorker neutralisée");
+      
+      return {
+        port: {
+          start: function() {},
+          close: function() {},
+          addEventListener: function() {},
+          removeEventListener: function() {},
+          dispatchEvent: function() { return true; }
+        },
+        addEventListener: function() {},
+        removeEventListener: function() {},
+        dispatchEvent: function() { return true; }
+      };
+    };
+  }
+  
+  // Neutraliser ServiceWorker
+  if (navigator.serviceWorker) {
+    navigator.serviceWorker.register = function() {
+      console.log("[EvalBox] Tentative d'enregistrement ServiceWorker neutralisée");
+      return Promise.reject(new Error("ServiceWorker registration blocked"));
+    };
+  }
+  
+  // *** 10. NEUTRALISATION STORAGE EVENTS ***
+  
+  // Intercepter les événements de stockage
+  var originalDispatchEvent = EventTarget.prototype.dispatchEvent;
+  
+  EventTarget.prototype.dispatchEvent = function(event) {
+    if (event && event.type === 'storage') {
+      return true; // Bloquer l'événement
+    }
+    return originalDispatchEvent.call(this, event);
+  };
+  
+  // *** 11. PROTECTION PROPRIÉTÉS FENÊTRE ***
+  
+  // Liste des propriétés à protéger
+  var windowProps = ['outerHeight', 'outerWidth', 'screenX', 'screenY'];
+  
+  // Sauvegarder les valeurs originales
+  var windowPropsValues = {};
+  windowProps.forEach(function(prop) {
+    windowPropsValues[prop] = window[prop];
+  });
+  
+  // Définir des getters statiques pour éviter la détection de changement de fenêtre
+  windowProps.forEach(function(prop) {
+    try {
+      Object.defineProperty(window, prop, {
+        get: function() { return windowPropsValues[prop]; },
+        configurable: true
+      });
+    } catch(e) {
+      console.log("[EvalBox] Erreur lors de la protection de " + prop + " (non critique)");
+    }
+  });
+  
+  // *** 12. NEUTRALISATION DÉTECTION OUTILS DÉVELOPPEUR ***
+  
+  // Liste de propriétés de console à sécuriser
+  var consoleProps = ['profiles', 'memory', 'debug'];
+  
+  // Remplacer de manière sécurisée
+  consoleProps.forEach(function(prop) {
+    if (console[prop]) {
+      // Remplacer par des valeurs vides/factices
+      console[prop] = typeof console[prop] === 'function' ? function(){} : [];
+    }
+  });
+  
+  // *** 13. SIMULATION D'ACTIVITÉ UTILISATEUR ***
+  
+  // Simuler des mouvements de souris aléatoires
+  setInterval(function() {
+    var evt = new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      clientX: Math.random() * window.innerWidth,
+      clientY: Math.random() * window.innerHeight
+    });
+    document.dispatchEvent(evt);
+  }, 3000);
+  
+  // Simuler des mouvements de scroll occasionnels
+  setInterval(function() {
+    if (Math.random() > 0.7) {
+      window.scrollBy(0, Math.random() > 0.5 ? 5 : -5);
+    }
+  }, 7000);
+  
+  // *** 14. NEUTRALISATION DES TIMERS DE SURVEILLANCE ***
+  
+  // Intercepter setInterval
+  var originalSetInterval = window.setInterval;
+  
+  window.setInterval = function(callback, delay) {
+    // Convertir la fonction en string pour analyse
+    var callbackStr = callback.toString();
+    
+    // Détecter les fonctions liées à la détection
+    if (callbackStr.indexOf('performance') >= 0 && 
+        (callbackStr.indexOf('now') >= 0 || callbackStr.indexOf('timing') >= 0) && 
+        (callbackStr.indexOf('diff') >= 0 || 
+         callbackStr.indexOf('delta') >= 0 || 
+         callbackStr.indexOf('check') >= 0 || 
+         callbackStr.indexOf('detect') >= 0)) {
+      console.log("[EvalBox] Timer de détection potentiel intercepté");
+      return originalSetInterval(function() {}, delay);
+    }
+    
+    return originalSetInterval(callback, delay);
+  };
+  
+  // *** 15. TESTS DE VÉRIFICATION ***
+  
+  // Test performance.now
+  var testStart = performance.now();
+  setTimeout(function() {
+    var testEnd = performance.now();
+    var testDiff = testEnd - testStart;
+    console.log("[EvalBox] Test performance.now: " + Math.round(testDiff) + "ms (devrait être ~50ms)");
+    
+    if (Math.abs(testDiff - 50) > 20) {
+      console.warn("[EvalBox] Warning: performance.now() pourrait ne pas fonctionner correctement");
+    }
+  }, 50);
+  
+  // Test visibilité
+  console.log("[EvalBox] document.hidden = " + document.hidden);
+  console.log("[EvalBox] document.visibilityState = " + document.visibilityState);
+  
+  // Notification finale
+  console.log("[EvalBox] Système de protection ultime v" + VERSION + " activé avec succès!");
+  alert("Protection contre EvalBox v" + VERSION + " activée avec succès! Vous pouvez maintenant naviguer librement entre les onglets.");
+})();`;
+      }
+      
+      // Initialiser les boutons
+      function init() {
+        if (generateBtn) {
+          generateBtn.addEventListener('click', function() {
+            log("Génération du code d'injection ultime...");
+            try {
+              const code = generateInjectionCode();
+              codeOutput.textContent = code;
+              log("Code généré avec succès");
+            } catch (err) {
+              log("Erreur lors de la génération du code: " + err);
+            }
+          });
+        }
+        
+        if (copyBtn) {
+          copyBtn.addEventListener('click', function() {
+            const code = codeOutput.textContent;
+            if (!code || code.trim() === '') {
+              log("Aucun code à copier. Générez d'abord le code.");
+              return;
+            }
+            
+            navigator.clipboard.writeText(code)
+              .then(() => {
+                log("Code copié dans le presse-papiers");
+              })
+              .catch(err => {
+                log("Erreur lors de la copie: " + err);
+                // Fallback: sélection manuelle
+                const range = document.createRange();
+                range.selectNodeContents(codeOutput);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                document.execCommand('copy');
+                selection.removeAllRanges();
+                log("Code copié dans le presse-papiers (méthode alternative)");
+              });
+          });
+        }
+        
+        log("Page chargée. Prêt à générer le code d'injection ultime.");
+      }
+      
+      // Exécuter au chargement
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+</body>
+</html> 
