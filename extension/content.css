@@ -1,0 +1,43 @@
+/* Study Cards Assistant - Styles pour le contenu injecté */
+
+.study-card {
+  margin-bottom: 10px !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+.study-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Assurer que nos styles ne sont pas écrasés */
+#study-cards-container {
+  all: initial;
+  font-family: Arial, sans-serif !important;
+  color: #333 !important;
+  z-index: 9999999 !important;
+  box-sizing: border-box !important;
+}
+
+#study-cards-container * {
+  box-sizing: border-box !important;
+}
+
+/* Personnalisation du scrollbar */
+#study-cards-container::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+#study-cards-container::-webkit-scrollbar-track {
+  background: #f1f1f1 !important;
+  border-radius: 4px !important;
+}
+
+#study-cards-container::-webkit-scrollbar-thumb {
+  background: #888 !important;
+  border-radius: 4px !important;
+}
+
+#study-cards-container::-webkit-scrollbar-thumb:hover {
+  background: #555 !important;
+} 

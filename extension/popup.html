@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Ninja-exam</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      width: 350px;
+      padding: 10px;
+      background-color: #1a1a1a;
+      color: #f0f0f0;
+    }
+    
+    h1 {
+      font-size: 18px;
+      color: #00ff7f;
+      margin-top: 0;
+      border-bottom: 1px solid #444;
+      padding-bottom: 5px;
+    }
+    
+    .tabs {
+      display: flex;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #444;
+      flex-wrap: wrap;
+    }
+    
+    .tab {
+      padding: 8px 12px;
+      cursor: pointer;
+      background: #333;
+      border: 1px solid #555;
+      border-bottom: none;
+      border-radius: 5px 5px 0 0;
+      margin-right: 3px;
+      font-size: 13px;
+    }
+    
+    .tab.active {
+      background: #00ff7f;
+      color: black;
+      border-color: #00ff7f;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    button {
+      background: #00ff7f;
+      color: black;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    
+    button:hover {
+      background: #00cc66;
+    }
+    
+    input, textarea, select {
+      width: calc(100% - 10px);
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background-color: #333;
+      color: #f0f0f0;
+    }
+    
+    .card {
+      background: #292929;
+      border: 1px solid #444;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    
+    .card-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #00ff7f;
+    }
+    
+    .card-content {
+      font-size: 14px;
+      color: #ddd;
+    }
+    
+    .delete-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: transparent;
+      border: none;
+      color: #ff4444;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .edit-btn {
+      position: absolute;
+      top: 5px;
+      right: 30px;
+      background: transparent;
+      border: none;
+      color: #44aaff;
+      cursor: pointer;
+      font-size: 16px;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .no-cards {
+      color: #777;
+      font-style: italic;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .search-container {
+      margin-bottom: 10px;
+    }
+    
+    .card-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .success-message {
+      background: #003311;
+      color: #00ff7f;
+      padding: 8px;
+      border-radius: 4px;
+      margin-top: 10px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ninja-exam Assistant</h1>
+  
+  <div class="tabs">
+    <div class="tab active" data-tab="view-cards">Mes antisèches</div>
+    <div class="tab" data-tab="add-card">Ajouter antisèche</div>
+  </div>
+  
+  <div class="tab-content active" id="view-cards">
+    <div class="search-container">
+      <input type="text" id="search-cards" placeholder="Rechercher réponse...">
+    </div>
+    <div class="card-list" id="cards-container">
+      <div class="no-cards">Aucune antisèche ajoutée</div>
+    </div>
+  </div>
+  
+  <div class="tab-content" id="add-card">
+    <input type="text" id="card-title" placeholder="Question d'examen">
+    <textarea id="card-content" placeholder="Réponse / solution / formule à retenir" rows="5"></textarea>
+    <select id="card-category">
+      <option value="">-- Matière --</option>
+      <option value="math">Mathématiques</option>
+      <option value="science">Sciences</option>
+      <option value="history">Histoire</option>
+      <option value="language">Langues</option>
+      <option value="other">Autre</option>
+    </select>
+    <button id="add-card-btn">Ajouter l'antisèche</button>
+    <div id="add-success" class="success-message">Antisèche ajoutée avec succès!</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 

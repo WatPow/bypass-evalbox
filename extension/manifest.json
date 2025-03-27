@@ -1,0 +1,34 @@
+{
+  "manifest_version": 2,
+  "name": "Ninja-exam",
+  "version": "1.0",
+  "description": "Assistant pour exams - Gardez vos antisèches à portée de main",
+  "icons": {
+    "48": "images/icon-48.png",
+    "96": "images/icon-96.png"
+  },
+  "browser_action": {
+    "default_icon": "images/icon-48.png",
+    "default_title": "Ninja-exam",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "studycards@example.com"
+    }
+  }
+} 
