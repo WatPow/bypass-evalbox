@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>EvalBox Killer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    h1 {
+      color: #e74c3c;
+      margin-top: 0;
+    }
+    
+    .code-block {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 20px 0;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+    
+    button {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    
+    button:hover {
+      background: #c0392b;
+    }
+    
+    .instructions {
+      background: #f1f9fe;
+      border-left: 4px solid #3498db;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .warning {
+      background: #fff4e6;
+      border-left: 4px solid #e67e22;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    #log {
+      height: 150px;
+      overflow-y: auto;
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 20px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>EvalBox Killer</h1>
+    
+    <div class="instructions">
+      <strong>Solution directe et optimisée</strong> pour contourner les détections de timing d'EvalBox.
+      Cette méthode cible directement le système de détection de la performance des navigateurs.
+    </div>
+    
+    <div class="warning">
+      <strong>Instructions:</strong>
+      <ol>
+        <li>Ouvrez la page d'examen dans un onglet</li>
+        <li>Cliquez sur "Générer Code" ci-dessous</li>
+        <li>Copiez le code généré</li>
+        <li>Ouvrez la console développeur dans l'onglet d'examen (F12)</li>
+        <li>Collez et exécutez le code dans la console</li>
+      </ol>
+    </div>
+    
+    <div class="code-block" id="code-output">// Cliquez sur "Générer Code" pour obtenir le script d'injection</div>
+    
+    <div>
+      <button id="generate">Générer Code</button>
+      <button id="copy">Copier le Code</button>
+    </div>
+    
+    <div id="log"></div>
+  </div>
+  
+  <script>
+    // Éléments DOM
+    const codeOutput = document.getElementById('code-output');
+    const generateBtn = document.getElementById('generate');
+    const copyBtn = document.getElementById('copy');
+    const logEl = document.getElementById('log');
+    
+    // Log helper
+    function log(message) {
+      const now = new Date();
+      const timestamp = now.toLocaleTimeString();
+      logEl.innerHTML += `[${timestamp}] ${message}<br>`;
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+    
+    // Version optimisée du code d'injection
+    function generateCode() {
+      return `
+// === EvalBox Killer ===
+(function() {
+  console.log("[EvalBox Killer] Démarrage...");
+  
+  // === NEUTRALISATION DE PERFORMANCE.NOW() ===
+  
+  // 1. Remplacer performance.now à sa source
+  const originalNow = Performance.prototype.now;
+  let baseTime = originalNow.call(performance);
+  let lastTimeStamp = Date.now();
+  
+  // Intercepter au niveau du prototype pour une efficacité maximale
+  Performance.prototype.now = function() {
+    // Calculer un temps d'exécution plausible (environ 60 FPS)
+    const currentTime = Date.now();
+    const elapsed = currentTime - lastTimeStamp;
+    lastTimeStamp = currentTime;
+    
+    // Incrémenter de manière constante (environ 16.67ms par frame)
+    baseTime += Math.min(elapsed, 17);
+    
+    return baseTime;
+  };
+  
+  // 2. Vérifier si la méthode est correctement remplacée
+  const testStart = performance.now();
+  setTimeout(function() {
+    const testEnd = performance.now();
+    const diff = testEnd - testStart;
+    console.log("[EvalBox Killer] Test performance.now: " + diff.toFixed(2) + "ms");
+    
+    if (diff > 80 || diff < 5) {
+      console.warn("[EvalBox Killer] Attention: Le remplacement de performance.now() pourrait ne pas fonctionner correctement");
+    } else {
+      console.log("[EvalBox Killer] performance.now() neutralisé avec succès");
+    }
+  }, 50);
+  
+  // === NEUTRALISATION DES DÉTECTIONS DE VISIBILITÉ ===
+  
+  // 1. Empêcher la détection de changement d'onglet
+  Object.defineProperty(document, 'visibilityState', {
+    get: function() { return "visible"; }
+  });
+  
+  Object.defineProperty(document, 'hidden', {
+    get: function() { return false; }
+  });
+  
+  document.hasFocus = function() { return true; };
+  
+  // 2. Bloquer les événements liés à la visibilité
+  const blockEvents = function(e) {
+    e.stopImmediatePropagation();
+    e.preventDefault();
+  };
+  
+  window.addEventListener('blur', blockEvents, true);
+  document.addEventListener('visibilitychange', blockEvents, true);
+  window.addEventListener('focus', function() {}, true);
+  
+  // 3. Bloquer les futurs écouteurs d'événements
+  const originalAddEventListener = EventTarget.prototype.addEventListener;
+  EventTarget.prototype.addEventListener = function(type, listener, options) {
+    if (type === 'visibilitychange' || type === 'blur' || type === 'focus') {
+      console.log("[EvalBox Killer] Bloqué tentative d'écoute de: " + type);
+      return;
+    }
+    return originalAddEventListener.call(this, type, listener, options);
+  };
+  
+  // === SIMULATION D'ACTIVITÉ ===
+  
+  // Simuler des mouvements de souris aléatoires toutes les 3 secondes
+  setInterval(function() {
+    const evt = new MouseEvent('mousemove', {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      clientX: Math.random() * window.innerWidth,
+      clientY: Math.random() * window.innerHeight
+    });
+    document.dispatchEvent(evt);
+  }, 3000);
+  
+  // === RECHERCHE ET DÉSACTIVATION DES SYSTÈMES DE DÉTECTION ===
+  
+  // 1. Rechercher les scripts qui pourraient contenir du code de détection
+  const scripts = document.querySelectorAll('script');
+  let detectionFound = false;
+  
+  scripts.forEach(script => {
+    const content = script.textContent || '';
+    if (content.includes('performance.now') && 
+        (content.includes('difference') || content.includes('delta') || 
+         content.includes('interval') || content.includes('check'))) {
+      detectionFound = true;
+      console.log("[EvalBox Killer] Détection possible de code de surveillance");
+    }
+  });
+  
+  // 2. Rechercher et neutraliser les timers suspects
+  const originalSetInterval = window.setInterval;
+  window.setInterval = function(callback, delay) {
+    // Convertir la fonction en string pour analyse
+    const callbackStr = callback.toString();
+    
+    if (callbackStr.includes('performance.now') && 
+        (callbackStr.includes('check') || callbackStr.includes('detect') || 
+         callbackStr.includes('diff') || callbackStr.includes('cheat'))) {
+      console.log("[EvalBox Killer] Timer de détection neutralisé");
+      return originalSetInterval(function() {}, delay);
+    }
+    
+    return originalSetInterval(callback, delay);
+  };
+  
+  console.log("[EvalBox Killer] Protection activée! Vous pouvez maintenant naviguer librement.");
+  alert("Protection contre EvalBox activée avec succès!");
+})();`;
+    }
+    
+    // Générer le code
+    generateBtn.addEventListener('click', function() {
+      codeOutput.textContent = generateCode();
+      log("Code d'injection généré");
+    });
+    
+    // Copier le code
+    copyBtn.addEventListener('click', function() {
+      const code = codeOutput.textContent;
+      navigator.clipboard.writeText(code)
+        .then(() => {
+          log("Code copié dans le presse-papiers");
+        })
+        .catch(err => {
+          log("Erreur lors de la copie: " + err);
+        });
+    });
+    
+    // Initialisation
+    log("Page chargée. Prêt à générer le code d'injection.");
+  </script>
+</body>
+</html> 

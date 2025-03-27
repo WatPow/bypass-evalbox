@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Simulation Détection Anti-triche</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #log {
+      background-color: #f5f5f5;
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 200px;
+      overflow-y: scroll;
+      white-space: pre-line;
+    }
+    .ok { color: green; }
+    .warn { color: orange; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Simulation de détection anti-triche (Evalbox)</h1>
+  <p>Change d'onglet ou minimise la fenêtre pour tester la détection.</p>
+  <p><strong>Horloge :</strong> <span id="clock"></span></p>
+  <h3>Journal des événements :</h3>
+  <div id="log"></div>
+  
+  <div style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+    <h3>Options de détection :</h3>
+    <div>
+      <input type="checkbox" id="visibility" checked>
+      <label for="visibility">Visibility API (détection changement d'onglet)</label>
+    </div>
+    <div>
+      <input type="checkbox" id="focusBlur" checked>
+      <label for="focusBlur">Focus/Blur (détection perte de focus)</label>
+    </div>
+    <div>
+      <input type="checkbox" id="hasFocus">
+      <label for="hasFocus">Vérification active (document.hasFocus)</label>
+    </div>
+    <div>
+      <input type="checkbox" id="mouseTracking">
+      <label for="mouseTracking">Suivi de souris (entrée/sortie)</label>
+    </div>
+    <div>
+      <input type="checkbox" id="inactivity">
+      <label for="inactivity">Détection d'inactivité</label>
+    </div>
+    <div>
+      <input type="checkbox" id="performance">
+      <label for="performance">Anomalies timing (performance.now)</label>
+    </div>
+    <div>
+      <input type="checkbox" id="fullscreen">
+      <label for="fullscreen">Détection mode plein écran</label>
+    </div>
+    <div>
+      <input type="checkbox" id="beforeUnload" checked>
+      <label for="beforeUnload">Alerte de fermeture</label>
+    </div>
+  </div>
+  
+  <button id="applySettings">Appliquer les paramètres</button>
+  <button id="startMonitoring">Démarrer surveillance</button>
+  <button id="stopMonitoring">Arrêter surveillance</button>
+
+  <script>
+    const logBox = document.getElementById('log');
+    let focusCheckInterval;
+    let mouseOutsideTime = null;
+    let lastActiveTime = Date.now();
+    let inactivityMonitoring;
+    let performanceMonitoringInterval;
+    let activeDetectors = {};
+
+    function logEvent(msg, cls = 'ok') {
+      const now = new Date().toLocaleTimeString();
+      const entry = `[${now}] ${msg}\n`;
+      const span = document.createElement('span');
+      span.className = cls;
+      span.textContent = entry;
+      logBox.appendChild(span);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    // Horloge
+    setInterval(() => {
+      document.getElementById('clock').textContent = new Date().toLocaleTimeString();
+    }, 1000);
+
+    // Gestion des détecteurs
+    function setupDetectors() {
+      // Récupérer les options cochées
+      activeDetectors = {
+        visibility: document.getElementById('visibility').checked,
+        focusBlur: document.getElementById('focusBlur').checked,
+        hasFocus: document.getElementById('hasFocus').checked,
+        mouseTracking: document.getElementById('mouseTracking').checked,
+        inactivity: document.getElementById('inactivity').checked,
+        performance: document.getElementById('performance').checked,
+        fullscreen: document.getElementById('fullscreen').checked,
+        beforeUnload: document.getElementById('beforeUnload').checked
+      };
+      
+      // Désactive tous les détecteurs d'abord
+      stopAllDetectors();
+      
+      // Active les détecteurs sélectionnés
+      if (activeDetectors.visibility) {
+        setupVisibilityDetection();
+      }
+      
+      if (activeDetectors.focusBlur) {
+        setupFocusBlurDetection();
+      }
+      
+      if (activeDetectors.fullscreen) {
+        setupFullscreenDetection();
+      }
+      
+      if (activeDetectors.beforeUnload) {
+        setupBeforeUnloadWarning();
+      }
+      
+      // Log des paramètres activés
+      logEvent(`Configuration appliquée: ${Object.entries(activeDetectors)
+        .filter(([_, value]) => value)
+        .map(([key]) => key)
+        .join(', ')}`, 'ok');
+    }
+    
+    // Nettoyer tous les event listeners (simplification pour la démo)
+    function stopAllDetectors() {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('blur', handleBlur);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      
+      clearInterval(focusCheckInterval);
+      clearInterval(inactivityMonitoring);
+      stopPerformanceMonitoring();
+      
+      logEvent('Tous les détecteurs ont été réinitialisés', 'ok');
+    }
+
+    // Détection visibility change
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        logEvent('Changement d\'onglet détecté (document.hidden = true)', 'warn');
+      } else {
+        logEvent('Retour sur l\'onglet détecté (document.hidden = false)', 'ok');
+      }
+    }
+    
+    function setupVisibilityDetection() {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+      logEvent('Détection par Visibility API activée', 'ok');
+    }
+
+    // Détection de focus / blur
+    function handleBlur() {
+      logEvent('Fenêtre désactivée (blur)', 'warn');
+    }
+    
+    function handleFocus() {
+      logEvent('Fenêtre réactivée (focus)', 'ok');
+      lastActiveTime = Date.now();
+    }
+    
+    function setupFocusBlurDetection() {
+      window.addEventListener('blur', handleBlur);
+      window.addEventListener('focus', handleFocus);
+      logEvent('Détection par Focus/Blur activée', 'ok');
+    }
+
+    // Détection de mouvements de souris
+    function handleMouseLeave() {
+      mouseOutsideTime = Date.now();
+      logEvent('Souris a quitté la fenêtre', 'warn');
+    }
+    
+    function handleMouseEnter() {
+      if (mouseOutsideTime) {
+        const timeOutside = Math.round((Date.now() - mouseOutsideTime) / 1000);
+        logEvent(`Souris revenue après ${timeOutside} secondes`, 'ok');
+        mouseOutsideTime = null;
+        lastActiveTime = Date.now();
+      }
+    }
+    
+    function setupMouseTracking() {
+      document.addEventListener('mouseleave', handleMouseLeave);
+      document.addEventListener('mouseenter', handleMouseEnter);
+      logEvent('Suivi de souris activé', 'ok');
+    }
+
+    // Détection d'activité utilisateur
+    function setupActivityTracking() {
+      document.addEventListener('mousemove', () => lastActiveTime = Date.now());
+      document.addEventListener('keydown', () => lastActiveTime = Date.now());
+      document.addEventListener('click', () => lastActiveTime = Date.now());
+      logEvent('Suivi d\'activité activé', 'ok');
+    }
+
+    // Surveiller l'inactivité
+    function startInactivityMonitoring() {
+      if (!activeDetectors.inactivity) return;
+      
+      setupActivityTracking();
+      inactivityMonitoring = setInterval(() => {
+        const inactiveTime = Math.round((Date.now() - lastActiveTime) / 1000);
+        if (inactiveTime > 5) {
+          logEvent(`Inactivité détectée depuis ${inactiveTime} secondes`, 'warn');
+        }
+      }, 5000);
+      logEvent('Détection d\'inactivité activée', 'ok');
+    }
+
+    // Vérification intensive de focus
+    function startHasFocusMonitoring() {
+      if (!activeDetectors.hasFocus) return;
+      
+      focusCheckInterval = setInterval(() => {
+        if (!document.hasFocus()) {
+          logEvent('Vérification active: fenêtre non focalisée (hasFocus)', 'warn');
+        }
+      }, 1000);
+      logEvent('Vérification active par hasFocus activée', 'ok');
+    }
+
+    // Détection par différences de timing (performance.now)
+    function startPerformanceMonitoring() {
+      if (!activeDetectors.performance) return;
+      
+      let lastTime = performance.now();
+      performanceMonitoringInterval = setInterval(() => {
+        const currentTime = performance.now();
+        const diff = currentTime - lastTime - 100; // devrait être proche de 100ms
+        
+        // Si l'écart est trop important, l'onglet a probablement été inactif
+        if (Math.abs(diff) > 200) {
+          logEvent(`Anomalie de timing détectée: décalage de ${Math.round(diff)}ms`, 'error');
+        }
+        
+        lastTime = currentTime;
+      }, 100);
+      logEvent('Détection par performance.now activée', 'ok');
+    }
+
+    function stopPerformanceMonitoring() {
+      clearInterval(performanceMonitoringInterval);
+    }
+
+    // Détection par vérification du fullscreen
+    function handleFullscreenChange() {
+      if (document.fullscreenElement) {
+        logEvent('Mode plein écran activé', 'ok');
+      } else {
+        logEvent('Mode plein écran désactivé', 'warn');
+      }
+    }
+    
+    function setupFullscreenDetection() {
+      document.addEventListener('fullscreenchange', handleFullscreenChange);
+      logEvent('Détection de plein écran activée', 'ok');
+    }
+    
+    // Avertissement de fermeture
+    function handleBeforeUnload(e) {
+      const message = "Attention: quitter cette page sera enregistré comme une tentative de contournement";
+      e.returnValue = message;
+      return message;
+    }
+    
+    function setupBeforeUnloadWarning() {
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      logEvent('Alerte de fermeture activée', 'ok');
+    }
+
+    // Démarrer la surveillance avec les options sélectionnées
+    function startMonitoring() {
+      if (activeDetectors.mouseTracking) {
+        setupMouseTracking();
+      }
+      
+      if (activeDetectors.inactivity) {
+        startInactivityMonitoring();
+      }
+      
+      if (activeDetectors.hasFocus) {
+        startHasFocusMonitoring();
+      }
+      
+      if (activeDetectors.performance) {
+        startPerformanceMonitoring();
+      }
+      
+      logEvent('Surveillance démarrée avec les options sélectionnées', 'ok');
+    }
+
+    function stopMonitoring() {
+      clearInterval(focusCheckInterval);
+      clearInterval(inactivityMonitoring);
+      stopPerformanceMonitoring();
+      logEvent('Surveillance arrêtée', 'ok');
+    }
+
+    // Contrôles d'interface
+    document.getElementById('applySettings').addEventListener('click', setupDetectors);
+    document.getElementById('startMonitoring').addEventListener('click', startMonitoring);
+    document.getElementById('stopMonitoring').addEventListener('click', stopMonitoring);
+
+    // Configuration initiale
+    setupDetectors();
+    logEvent('Page chargée. Sélectionnez les détecteurs et appliquez les paramètres.', 'ok');
+  </script>
+</body>
+</html>
