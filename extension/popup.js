@@ -164,14 +164,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // Fonction pour obtenir une couleur basée sur la catégorie
   function getCategoryColor(category) {
     const colors = {
-      'math': '#00cc66',
-      'science': '#44aaff',
-      'history': '#ff9900',
-      'language': '#ff66ff',
-      'other': '#aaaaaa'
+      'math': '#607d8b',      // Bleu gris
+      'science': '#546e7a',   // Bleu gris foncé
+      'history': '#78909c',   // Bleu gris clair
+      'language': '#455a64',  // Bleu gris très foncé
+      'other': '#90a4ae'      // Bleu gris très clair
     };
     
-    return colors[category] || '#aaaaaa';
+    return colors[category] || '#78909c';
   }
   
   // Fonction pour supprimer une carte
