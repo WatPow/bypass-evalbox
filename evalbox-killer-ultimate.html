@@ -295,13 +295,51 @@
   } catch(e) {
     console.log("[EvalBox] Note: Certaines propriétés de visibilité ne peuvent pas être modifiées (non critique)");
   }
+
+  // *** 3.1 NEUTRALISATION DE LA DÉTECTION DU MODE PLEIN ÉCRAN ***
+  
+  try {
+    console.log("[EvalBox] Neutralisation des détections de plein écran...");
+    
+    // Simuler que le document est toujours en mode plein écran
+    Object.defineProperty(document, 'fullscreenElement', {
+      get: function() {
+        return document.documentElement; // Fait croire que le document est en mode plein écran
+      },
+      configurable: true
+    });
+    
+    // Neutraliser les méthodes de l'API Fullscreen
+    Document.prototype.requestFullscreen = function() {
+      console.log("[EvalBox] Appel à requestFullscreen intercepté");
+      return Promise.resolve();
+    };
+    
+    Element.prototype.requestFullscreen = function() {
+      console.log("[EvalBox] Appel à requestFullscreen sur un élément intercepté");
+      return Promise.resolve();
+    };
+    
+    // Intercépter exitFullscreen
+    if (document.exitFullscreen) {
+      document.exitFullscreen = function() {
+        console.log("[EvalBox] Tentative de sortie du plein écran bloquée");
+        return Promise.resolve();
+      };
+    }
+    
+    console.log("[EvalBox] Neutralisation du mode plein écran terminée");
+  } catch(e) {
+    console.log("[EvalBox] Erreur lors de la neutralisation du plein écran: " + e.message);
+  }
   
   // *** 4. NEUTRALISATION DES ÉVÉNEMENTS ***
   
   var blockedEvents = [
     'visibilitychange', 'webkitvisibilitychange', 'mozvisibilitychange',
     'blur', 'focus', 'focusin', 'focusout',
-    'pagehide', 'pageshow', 'freeze', 'resume'
+    'pagehide', 'pageshow', 'freeze', 'resume',
+    'fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'
   ];
   
   var originalAddEventListener = EventTarget.prototype.addEventListener;

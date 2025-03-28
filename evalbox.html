@@ -75,6 +75,7 @@
     let lastActiveTime = Date.now();
     let inactivityMonitoring;
     let performanceMonitoringInterval;
+    let fullscreenCheckInterval;
     let activeDetectors = {};
 
     function logEvent(msg, cls = 'ok') {
@@ -267,11 +268,84 @@
       }
     }
     
-    function setupFullscreenDetection() {
-      document.addEventListener('fullscreenchange', handleFullscreenChange);
-      logEvent('Détection de plein écran activée', 'ok');
+    function checkFullscreenStatus() {
+      // Vérifier si on est en vrai mode plein écran via l'API Fullscreen (F11)
+      const isAPIFullscreen = Boolean(document.fullscreenElement);
+      
+      // On peut être en mode fenêtre maximisée sans être en vrai plein écran
+      const isScreenSizeFullscreen = 
+        window.innerWidth >= window.screen.width * 0.95 && 
+        window.innerHeight >= window.screen.height * 0.95;
+      
+      if (isAPIFullscreen) {
+        // Mode plein écran F11 ou requestFullscreen() activé
+        logEvent('CONFORME: Mode plein écran F11 activé ✓', 'ok');
+      } else if (isScreenSizeFullscreen) {
+        // Fenêtre maximisée mais pas en F11
+        logEvent('NON CONFORME: Fenêtre maximisée mais pas en mode F11', 'warn');
+      } else {
+        // Ni en F11 ni maximisé
+        logEvent('NON CONFORME: Fenêtre ni en plein écran ni maximisée', 'warn');
+      }
+      
+      // Mettre à jour une indication visuelle pour l'utilisateur
+      updateFullscreenStatus(isAPIFullscreen);
     }
     
+    function updateFullscreenStatus(isFullscreen) {
+      // Créer ou mettre à jour l'indicateur visuel de plein écran
+      let statusIndicator = document.getElementById('fullscreenStatus');
+      
+      if (!statusIndicator) {
+        statusIndicator = document.createElement('div');
+        statusIndicator.id = 'fullscreenStatus';
+        statusIndicator.style.position = 'fixed';
+        statusIndicator.style.top = '10px';
+        statusIndicator.style.right = '10px';
+        statusIndicator.style.padding = '5px 10px';
+        statusIndicator.style.borderRadius = '5px';
+        statusIndicator.style.fontWeight = 'bold';
+        document.body.appendChild(statusIndicator);
+      }
+      
+      if (isFullscreen) {
+        statusIndicator.style.backgroundColor = 'green';
+        statusIndicator.style.color = 'white';
+        statusIndicator.textContent = '✓ Mode plein écran F11 actif';
+      } else {
+        statusIndicator.style.backgroundColor = 'red';
+        statusIndicator.style.color = 'white';
+        statusIndicator.textContent = '✗ F11 non activé';
+      }
+    }
+    
+    function setupFullscreenDetection() {
+      document.addEventListener('fullscreenchange', handleFullscreenChange);
+      
+      // Ajouter un bouton pour entrer en mode plein écran
+      const fullscreenBtn = document.createElement('button');
+      fullscreenBtn.textContent = 'Activer le plein écran F11';
+      fullscreenBtn.style.marginLeft = '10px';
+      fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => {
+            logEvent(`Erreur lors de l'activation du plein écran: ${err.message}`, 'error');
+          });
+        }
+      });
+      
+      // Ajouter un texte explicatif
+      const explanationText = document.createElement('p');
+      explanationText.innerHTML = '<strong>Important:</strong> Le mode plein écran F11 (ou via le bouton ci-dessus) est requis. Une fenêtre simplement maximisée n\'est pas suffisante.';
+      explanationText.style.marginTop = '10px';
+      explanationText.style.color = '#d00';
+      
+      document.getElementById('stopMonitoring').after(fullscreenBtn);
+      fullscreenBtn.after(explanationText);
+      
+      logEvent('Détection de plein écran activée', 'ok');
+    }
+
     // Avertissement de fermeture
     function handleBeforeUnload(e) {
       const message = "Attention: quitter cette page sera enregistré comme une tentative de contournement";
@@ -302,14 +376,45 @@
         startPerformanceMonitoring();
       }
       
+      if (activeDetectors.fullscreen) {
+        startFullscreenMonitoring();
+      }
+      
       logEvent('Surveillance démarrée avec les options sélectionnées', 'ok');
     }
 
     function stopMonitoring() {
       clearInterval(focusCheckInterval);
       clearInterval(inactivityMonitoring);
+      clearInterval(fullscreenCheckInterval);
       stopPerformanceMonitoring();
       logEvent('Surveillance arrêtée', 'ok');
+    }
+
+    // Vérification active du mode plein écran
+    function startFullscreenMonitoring() {
+      if (!activeDetectors.fullscreen) return;
+      
+      // Afficher les informations sur l'écran pour le débogage
+      logScreenInfo();
+      
+      // Vérification initiale
+      checkFullscreenStatus();
+      
+      // Vérification périodique
+      fullscreenCheckInterval = setInterval(() => {
+        checkFullscreenStatus();
+      }, 2000);
+      
+      logEvent('Vérification active du plein écran activée', 'ok');
+    }
+    
+    function logScreenInfo() {
+      logEvent('Infos navigateur récupérées:', 'ok');
+      logEvent(`- Écran total: ${window.screen.width}x${window.screen.height}`, 'ok');
+      logEvent(`- Écran disponible: ${window.screen.availWidth}x${window.screen.availHeight}`, 'ok');
+      logEvent(`- Fenêtre (outer): ${window.outerWidth}x${window.outerHeight}`, 'ok');
+      logEvent(`- Fenêtre (inner): ${window.innerWidth}x${window.innerHeight}`, 'ok');
     }
 
     // Contrôles d'interface
